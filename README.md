@@ -1,6 +1,8 @@
 Core Lithology Filler
 Welcome to the Core Lithology Filler application! 🌟
 
+https://mikace23.github.io/Lithology/
+
 About
 The Core Lithology Filler is a user-friendly web application designed to streamline the process of filling core samples with lithology patterns. Geared towards geologists, researchers, and students, this tool offers a convenient and efficient solution for visualizing geological formations with precision and clarity.
 
