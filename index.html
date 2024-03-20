@@ -1,386 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Well Lithology Filler</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-        }
-
-        .app-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #column-container {
-            display: flex;
-            margin-right: 20px;
-        }
-
-        #pattern-container,
-        #depth-container {
-            width: 50px;
-            height: 900px;
-            border: 1px solid #ccc;
-            position: relative;
-        }
-
-        #column,
-        #depth-column {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-
-        .depth-tick {
-            stroke: #000;
-            stroke-width: 1;
-        }
-
-        .minor-depth-tick {
-            stroke: #888;
-            stroke-width: 0.5;
-        }
-
-        .depth-label {
-            font-size: 12px;
-            text-anchor: start;
-            dominant-baseline: middle;
-        }
-
-        .controls-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .depth-display-container {
-            margin-bottom: 10px;
-        }
-
-        #depth-display {
-            width: 100px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .buttons-container button {
-            margin-bottom: 10px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .buttons-container button:hover {
-            background-color: #0056b3;
-        }
-
-        #pattern-panel {
-            margin-left: 20px;
-        }
-
-        #pattern-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .pattern-item {
-            margin: 10px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .pattern-item img {
-            width: 100px;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-
-        .pattern-item span {
-            display: block;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Well Lithology Filler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    #depth-container, #pattern-container {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    #depth-column, #column {
+      width: 100%;
+      height: 300px;
+    }
+    .controls-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 400px;
+    }
+    #depth-display {
+      width: calc(100% - 10px);
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .buttons-container button {
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
+    }
+    #pattern-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .pattern-item {
+      margin: 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .pattern-item img {
+      width: 100px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    .pattern-item span {
+      display: block;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-
 <div class="app-container">
-    <div id="column-container">
-        <div id="depth-container">
-            <svg id="depth-column" width="100%" height="100%">
-                <!-- Depth graduations will be added dynamically here -->
-            </svg>
-        </div>
-        <div id="pattern-container">
-            <svg id="column" width="100%" height="100%">
-                <defs>
-                    <pattern id="claystonePattern" patternUnits="userSpaceOnUse" width="100" height="100">
-                        <image xlink:href="Claystone.svg" width="100" height="100" />
-                    </pattern>
-                    <pattern id="limestonePattern" patternUnits="userSpaceOnUse" width="100" height="100">
-                        <image xlink:href="Limestone.svg" width="100" height="100" />
-                    </pattern>
-                    <pattern id="sandstonePattern" patternUnits="userSpaceOnUse" width="100" height="100">
-                        <image xlink:href="Sandstone.svg" width="100" height="100" />
-                    </pattern>
-                    <pattern id="nanPattern" patternUnits="userSpaceOnUse" width="100" height="100">
-                        <rect width="100" height="100" fill="#fff" />
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="none"/>
-            </svg>
-        </div>
+  <div id="column-container">
+    <div id="depth-container">
+      <svg id="depth-column"></svg>
     </div>
-    <div class="controls-container">
-        <div class="depth-display-container">
-            <input type="text" id="depth-display" placeholder="Depth (m)" readonly>
-        </div>
-        <div class="buttons-container">
-            <button id="clear-button">Clear</button>
-            <button id="export-button">Export</button>
-        </div>
+    <div id="pattern-container">
+      <svg id="column"></svg>
     </div>
+  </div>
+  <div class="controls-container">
+    <input type="text" id="depth-display" placeholder="Depth (m)" readonly>
+    <div class="buttons-container">
+      <button id="clear-button">Clear</button>
+      <button id="export-button">Export</button>
+    </div>
+  </div>
 </div>
-
 <div id="pattern-panel">
-    <h2>Select Pattern:</h2>
-    <div id="pattern-list">
-        <div class="pattern-item" data-pattern="Claystone">
-            <img src="Claystone.svg" alt="Claystone Pattern">
-            <span>Claystone</span>
-        </div>
-        <div class="pattern-item" data-pattern="Limestone">
-            <img src="Limestone.svg" alt="Limestone Pattern">
-            <span>Limestone</span>
-        </div>
-        <div class="pattern-item" data-pattern="Sandstone">
-            <img src="Sandstone.svg" alt="Sandstone Pattern">
-            <span>Sandstone</span>
-        </div>
-        <div class="pattern-item" data-pattern="NAN">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3C/svg%3E" alt="NAN Pattern">
-            <span>NAN</span>
-        </div>
+  <h2>Select Pattern:</h2>
+  <div id="pattern-list">
+    <div class="pattern-item" data-pattern="Claystone">
+      <img src="Claystone.svg" alt="Claystone Pattern">
+      <span>Claystone</span>
     </div>
+    <div class="pattern-item" data-pattern="Limestone">
+      <img src="Limestone.svg" alt="Limestone Pattern">
+      <span>Limestone</span>
+    </div>
+    <div class="pattern-item" data-pattern="Sandstone">
+      <img src="Sandstone.svg" alt="Sandstone Pattern">
+      <span>Sandstone</span>
+    </div>
+    <div class="pattern-item" data-pattern="NAN">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3C/svg%3E" alt="NAN Pattern">
+      <span>NAN</span>
+    </div>
+  </div>
 </div>
-
 <script>
-    const patternItems = document.querySelectorAll('.pattern-item');
-    const column = document.getElementById("column");
-    const depthColumn = document.getElementById("depth-column");
-    const depthDisplay = document.getElementById("depth-display");
-    const exportButton = document.getElementById("export-button");
-    const clearButton = document.getElementById("clear-button");
-    let isMouseDown = false;
-    let startY = 0;
-    let selectedPattern = '';
-    let filledRects = [];
-
-    // Event listener for pattern item click
-    patternItems.forEach(item => {
-        item.addEventListener('click', function() {
-            selectedPattern = this.getAttribute('data-pattern');
-        });
+  const patternItems = document.querySelectorAll('.pattern-item');
+  const column = document.getElementById("column");
+  const depthColumn = document.getElementById("depth-column");
+  const depthDisplay = document.getElementById("depth-display");
+  const exportButton = document.getElementById("export-button");
+  const clearButton = document.getElementById("clear-button");
+  let isMouseDown = false;
+  let startY = 0;
+  let selectedPattern = '';
+  let filledRects = [];
+  patternItems.forEach(item => {
+    item.addEventListener('click', function() {
+      selectedPattern = this.getAttribute('data-pattern');
     });
-
-    column.addEventListener("mousedown", function(event) {
-        isMouseDown = true;
-        startY = event.clientY - column.getBoundingClientRect().top;
-        fillColumn(event);
-        updateDepthDisplay(event);
-    });
-
-    document.addEventListener("mouseup", function() {
-        isMouseDown = false;
-    });
-
-    column.addEventListener("mousemove", function(event) {
-        if (isMouseDown) {
-            fillColumn(event);
-            updateDepthDisplay(event);
-        }
-    });
-
-    exportButton.addEventListener("click", function() {
-        exportDepthIntervals();
-    });
-
-    clearButton.addEventListener("click", function() {
-        clearColumn();
-    });
-
-    function fillColumn(event) {
-        const mouseY = event.clientY - column.getBoundingClientRect().top;
-
-        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttribute("x", "0");
-        rect.setAttribute("y", Math.min(startY, mouseY));
-        rect.setAttribute("width", "100%");
-        rect.setAttribute("height", Math.abs(mouseY - startY));
-        rect.setAttribute("fill", `url(#${selectedPattern.toLowerCase()}Pattern)`);
-
-        const newRects = [rect]; // Store new rects to be added
-
-        // Store the overlapped parts of existing rects to be replaced
-        const overlappingRects = [];
-
-        // Find the overlapped parts of existing rects and store them for replacement
-        filledRects.forEach(existingRect => {
-            const existingRectY = parseFloat(existingRect.getAttribute("y"));
-            const existingRectHeight = parseFloat(existingRect.getAttribute("height"));
-            const existingRectBottom = existingRectY + existingRectHeight;
-
-            if (startY < existingRectBottom && mouseY > existingRectY) {
-                const overlapTop = Math.max(startY, existingRectY);
-                const overlapBottom = Math.min(mouseY, existingRectBottom);
-                const overlapHeight = overlapBottom - overlapTop;
-
-                // Create new rect for the overlapped part with new pattern
-                const overlapRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                overlapRect.setAttribute("x", "0");
-                overlapRect.setAttribute("y", overlapTop);
-                overlapRect.setAttribute("width", "100%");
-                overlapRect.setAttribute("height", overlapHeight);
-                overlapRect.setAttribute("fill", `url(#${selectedPattern.toLowerCase()}Pattern)`);
-                newRects.push(overlapRect);
-
-                // Store the existing rect to be replaced
-                overlappingRects.push(existingRect);
-            }
-        });
-
-        // Remove the overlapping parts of existing rects
-        overlappingRects.forEach(rect => {
-            column.removeChild(rect);
-            filledRects.splice(filledRects.indexOf(rect), 1);
-        });
-
-        // Append new rects
-        newRects.forEach(newRect => {
-            column.appendChild(newRect);
-            filledRects.push(newRect);
-        });
-
-        startY = mouseY; // Update startY for continuous filling
+  });
+  column.addEventListener("mousedown", function(event) {
+    isMouseDown = true;
+    startY = event.clientY - column.getBoundingClientRect().top;
+    fillColumn(event);
+    updateDepthDisplay(event);
+  });
+  document.addEventListener("mouseup", function() {
+    isMouseDown = false;
+  });
+  column.addEventListener("mousemove", function(event) {
+    if (isMouseDown) {
+      fillColumn(event);
+      updateDepthDisplay(event);
     }
-
-    function updateDepthDisplay(event) {
-        const depth = event.clientY - column.getBoundingClientRect().top;
-        depthDisplay.value = `${(depth / 100).toFixed(2)}m`;
-    }
-
-    function exportDepthIntervals() {
-        const depthIntervals = [];
-        let currentPattern = null;
-        let currentStart = null;
-        let currentEnd = null;
-
-        // Sort filled rectangles based on their y-coordinates
-        filledRects.sort((a, b) => {
-            const rectAY = parseFloat(a.getAttribute("y"));
-            const rectBY = parseFloat(b.getAttribute("y"));
-            return rectAY - rectBY;
-        });
-
-        filledRects.forEach(rect => {
-            const rectY = parseFloat(rect.getAttribute("y"));
-            const rectHeight = parseFloat(rect.getAttribute("height"));
-            const pattern = rect.getAttribute("fill").split("#")[1].replace("Pattern", "");
-
-            if (pattern === "NAN") {
-                if (currentPattern !== null) {
-                    // Adjust start and end depths if they are out of range
-                    const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
-                    const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
-                    depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
-                    currentPattern = null;
-                }
-            } else {
-                if (pattern !== currentPattern) {
-                    if (currentPattern !== null) {
-                        // Adjust start and end depths if they are out of range
-                        const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
-                        const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
-                        depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
-                    }
-                    currentPattern = pattern;
-                    currentStart = rectY;
-                }
-                currentEnd = rectY + rectHeight;
-            }
-        });
-
-        // Push the last interval if it exists
+  });
+  exportButton.addEventListener("click", function() {
+    exportDepthIntervals();
+  });
+  clearButton.addEventListener("click", function() {
+    clearColumn();
+  });
+  function fillColumn(event) {
+    const mouseY = event.clientY - column.getBoundingClientRect().top;
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", "0");
+    rect.setAttribute("y", Math.min(startY, mouseY));
+    rect.setAttribute("width", "100%");
+    rect.setAttribute("height", Math.abs(mouseY - startY));
+    rect.setAttribute("fill", `url(#${selectedPattern.toLowerCase()}Pattern)`);
+    const newRects = [rect];
+    const overlappingRects = [];
+    filledRects.forEach(existingRect => {
+      const existingRectY = parseFloat(existingRect.getAttribute("y"));
+      const existingRectHeight = parseFloat(existingRect.getAttribute("height"));
+      const existingRectBottom = existingRectY + existingRectHeight;
+      if (startY < existingRectBottom && mouseY > existingRectY) {
+        const overlapTop = Math.max(startY, existingRectY);
+        const overlapBottom = Math.min(mouseY, existingRectBottom);
+        const overlapHeight = overlapBottom - overlapTop;
+        const overlapRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        overlapRect.setAttribute("x", "0");
+        overlapRect.setAttribute("y", overlapTop);
+        overlapRect.setAttribute("width", "100%");
+        overlapRect.setAttribute("height", overlapHeight);
+        overlapRect.setAttribute("fill", `url(#${selectedPattern.toLowerCase()}Pattern)`);
+        newRects.push(overlapRect);
+        overlappingRects.push(existingRect);
+      }
+    });
+    overlappingRects.forEach(rect => {
+      column.removeChild(rect);
+      filledRects.splice(filledRects.indexOf(rect), 1);
+    });
+    newRects.forEach(newRect => {
+      column.appendChild(newRect);
+      filledRects.push(newRect);
+    });
+   
+    startY = mouseY;
+  }
+  function updateDepthDisplay(event) {
+    const depth = event.clientY - column.getBoundingClientRect().top;
+    depthDisplay.value = `${(depth / 100).toFixed(2)}m`;
+  }
+  function exportDepthIntervals() {
+    const depthIntervals = [];
+    let currentPattern = null;
+    let currentStart = null;
+    let currentEnd = null;
+    filledRects.sort((a, b) => {
+      const rectAY = parseFloat(a.getAttribute("y"));
+      const rectBY = parseFloat(b.getAttribute("y"));
+      return rectAY - rectBY;
+    });
+    filledRects.forEach(rect => {
+      const rectY = parseFloat(rect.getAttribute("y"));
+      const rectHeight = parseFloat(rect.getAttribute("height"));
+      const pattern = rect.getAttribute("fill").split("#")[1].replace("Pattern", "");
+      if (pattern === "NAN") {
         if (currentPattern !== null) {
-            // Adjust start and end depths if they are out of range
+          const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
+          const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
+          depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
+          currentPattern = null;
+        }
+      } else {
+        if (pattern !== currentPattern) {
+          if (currentPattern !== null) {
             const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
             const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
             depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
+          }
+          currentPattern = pattern;
+          currentStart = rectY;
         }
-
-        // Check if there are no filled intervals and add a NAN interval covering the entire depth range
-        if (depthIntervals.length === 0) {
-            depthIntervals.push("From 0.00m to 9.00m NAN");
-        }
-
-        alert(depthIntervals.join("\n"));
+        currentEnd = rectY + rectHeight;
+      }
+    });
+    if (currentPattern !== null) {
+      const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
+      const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
+      depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
     }
-
-    function clearColumn() {
-        filledRects.forEach(rect => {
-            column.removeChild(rect);
-        });
-        filledRects = [];
+    if (depthIntervals.length === 0) {
+      depthIntervals.push("From 0.00m to 9.00m NAN");
     }
-
-    // Function to create depth graduations and labels
-    function createDepthGraduations() {
-        const depthContainer = document.getElementById("depth-container");
-        const depthColumn = document.getElementById("depth-column");
-
-        for (let i = 0; i <= 90; i++) { // Changed to 90 to include minor ticks
-            const depth = i * 10; // Convert meter to pixels
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", i % 10 === 0 ? "0" : "5"); // Use "5" for minor ticks
-            line.setAttribute("y1", depth);
-            line.setAttribute("x2", i % 10 === 0 ? "20" : "10"); // Use "10" for minor ticks
-            line.setAttribute("y2", depth);
-            line.classList.add(i % 10 === 0 ? "depth-tick" : "minor-depth-tick"); // Check if it's a major or minor tick
-            depthColumn.appendChild(line);
-
-            if (i % 10 === 0) { // Add labels for major ticks
-                const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                label.setAttribute("x", "30");
-                label.setAttribute("y", depth);
-                label.textContent = `${i / 10}m`; // Divide by 10 to show major labels every 1m
-                label.classList.add("depth-label");
-                depthColumn.appendChild(label);
-            }
-        }
+    alert(depthIntervals.join("\n"));
+  }
+  function clearColumn() {
+    filledRects.forEach(rect => {
+      column.removeChild(rect);
+    });
+    filledRects = [];
+  }
+  function createDepthGraduations() {
+    const depthContainer = document.getElementById("depth-container");
+    const depthColumn = document.getElementById("depth-column");
+    for (let i = 0; i <= 90; i++) {
+      const depth = i * 10;
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", i % 10 === 0 ? "0" : "5");
+      line.setAttribute("y1", depth);
+      line.setAttribute("x2", i % 10 === 0 ? "20" : "10");
+      line.setAttribute("y2", depth);
+      line.classList.add(i % 10 === 0 ? "depth-tick" : "minor-depth-tick");
+      depthColumn.appendChild(line);
+      if (i % 10 === 0) {
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", "30");
+        label.setAttribute("y", depth);
+        label.textContent = `${i / 10}m`;
+        label.classList.add("depth-label");
+        depthColumn.appendChild(label);
+      }
     }
-
-    // Call the function to create depth graduations and labels
-    createDepthGraduations();
+  }
+  createDepthGraduations();
 </script>
-
 </body>
 </html>
