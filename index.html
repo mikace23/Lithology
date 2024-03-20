@@ -158,7 +158,6 @@
         <div class="buttons-container">
             <button id="clear-button">Clear</button>
             <button id="export-button">Export</button>
-            <button id="export-pdf-button">Export as PDF</button> 
         </div>
     </div>
 </div>
@@ -184,11 +183,6 @@
         </div>
     </div>
 </div>
-
-<script src="script/jspdf.umd.min.js" crossorigin="anonymous" id="jsPDFScript"></script>
-
-
-
 
 <script>
     const patternItems = document.querySelectorAll('.pattern-item');
@@ -385,41 +379,9 @@
         }
     }
 
-    function exportAsPDF() {
-        // Check if jsPDF is defined
-        if (typeof jsPDF !== "undefined") {
-            const depthColumnSVG = document.getElementById("depth-column").outerHTML;
-            const columnSVG = document.getElementById("column").outerHTML;
-
-            // Create a new jsPDF instance
-            const doc = new jsPDF();
-
-            // Set the width and height of the PDF to A4 size (595.28 x 841.89 points)
-            const width = 595.28;
-            const height = 841.89;
-
-            // Render depth column SVG onto PDF
-            doc.addSVG(depthColumnSVG, 0, 0, width, height);
-
-            // Add a new page for the filled core column
-            doc.addPage();
-
-            // Render filled core column SVG onto PDF
-            doc.addSVG(columnSVG, 0, 0, width, height);
-
-            // Save the PDF
-            doc.save("well_lithology.pdf");
-        } else {
-            console.error("jsPDF library is not loaded.");
-        }
-    }
-
-    // Event listener for export pdf button
-    document.getElementById("export-pdf-button").addEventListener("click", exportAsPDF);
-
     // Call the function to create depth graduations and labels
     createDepthGraduations();
-
 </script>
+
 </body>
 </html>
