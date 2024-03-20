@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,6 +184,8 @@
     </div>
 </div>
 
+<div id="export-results-container"></div>
+
 <script>
     const patternItems = document.querySelectorAll('.pattern-item');
     const column = document.getElementById("column");
@@ -294,7 +297,6 @@
         let currentStart = null;
         let currentEnd = null;
 
-        // Sort filled rectangles based on their y-coordinates
         filledRects.sort((a, b) => {
             const rectAY = parseFloat(a.getAttribute("y"));
             const rectBY = parseFloat(b.getAttribute("y"));
@@ -308,19 +310,17 @@
 
             if (pattern === "NAN") {
                 if (currentPattern !== null) {
-                    // Adjust start and end depths if they are out of range
                     const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
                     const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
-                    depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
+                    depthIntervals.push([startDepth, endDepth, currentPattern]);
                     currentPattern = null;
                 }
             } else {
                 if (pattern !== currentPattern) {
                     if (currentPattern !== null) {
-                        // Adjust start and end depths if they are out of range
                         const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
                         const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
-                        depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
+                        depthIntervals.push([startDepth, endDepth, currentPattern]);
                     }
                     currentPattern = pattern;
                     currentStart = rectY;
@@ -329,20 +329,36 @@
             }
         });
 
-        // Push the last interval if it exists
         if (currentPattern !== null) {
-            // Adjust start and end depths if they are out of range
             const startDepth = Math.max(currentStart / 100, 0).toFixed(2);
             const endDepth = Math.min(currentEnd / 100, 9).toFixed(2);
-            depthIntervals.push(`From ${startDepth}m to ${endDepth}m ${currentPattern}`);
+            depthIntervals.push([startDepth, endDepth, currentPattern]);
         }
 
-        // Check if there are no filled intervals and add a NAN interval covering the entire depth range
         if (depthIntervals.length === 0) {
-            depthIntervals.push("From 0.00m to 9.00m NAN");
+            depthIntervals.push(["0.00", "9.00", "NAN"]);
         }
 
-        alert(depthIntervals.join("\n"));
+        // Create a table to display depth intervals and lithologies
+        const table = document.createElement("table");
+        const headerRow = table.insertRow();
+        const depthHeader = headerRow.insertCell();
+        const lithologyHeader = headerRow.insertCell();
+        depthHeader.textContent = "Depth (m)";
+        lithologyHeader.textContent = "Lithology";
+
+        depthIntervals.forEach(interval => {
+            const row = table.insertRow();
+            const depthCell = row.insertCell();
+            const lithologyCell = row.insertCell();
+            depthCell.textContent = `From ${interval[0]}m to ${interval[1]}m`;
+            lithologyCell.textContent = interval[2];
+        });
+
+        // Clear previous results and append the new table to the container
+        const exportResultsContainer = document.getElementById("export-results-container");
+        exportResultsContainer.innerHTML = '';
+        exportResultsContainer.appendChild(table);
     }
 
     function clearColumn() {
